@@ -4,6 +4,7 @@ UserCake Version: 2.0.1
 http://usercake.com
 */
 require_once("models/config.php");
+require_once ("navigation.php");
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 //Get token param

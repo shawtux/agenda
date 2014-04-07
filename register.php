@@ -89,6 +89,7 @@ if(!empty($_POST))
 }
 
 require_once("models/header.php");
+require_once ("navigation.php");
 ?>
 
 <body>

@@ -10,6 +10,9 @@ http://usercake.com
 <meta http-equiv='Content-Type' content='text/html; charset=utf-8' />
 <title><?php echo $websiteName; ?></title>
 <link href='<?php echo $template; ?>' rel='stylesheet' type='text/css' />
+<script src="http://code.jquery.com/jquery-1.11.0.js"></script>
+<script src="models/site-templates/js/bootstrap.js"></script>
 <script src='models/funcs.js' type='text/javascript'>
 </script>
+
 </head>

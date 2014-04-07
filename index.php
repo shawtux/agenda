@@ -8,10 +8,11 @@ require_once ("models/config.php");
 if (!securePage($_SERVER['PHP_SELF'])) {die();
 }
 require_once ("models/header.php");
+require_once ("navigation.php");
 ?>
 <body>
 	<div id='wrapper'>
-		<div class="navbar navbar-inverse navbar-fixed-top" id='top'>
+		<div id='top'>
 			<div id='logo'></div>
 		</div>
 		<div id='content'>

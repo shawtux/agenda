@@ -72,7 +72,7 @@ $permissionData = fetchAllPermissions();
 
 require_once("models/header.php");
 
-echo "
+?>
 <body>
 <div id='wrapper'>
 <div id='top'><div id='logo'></div></div>
@@ -80,17 +80,17 @@ echo "
 <h1>UserCake</h1>
 <h2>Admin Page</h2>
 <div id='left-nav'>";
-
+<?php 
 include("left-nav.php");
 
-echo "
+?>
 </div>
 <div id='main'>";
-
+<?php 
 echo resultBlock($errors,$successes);
 
-echo "
-<form name='adminPage' action='".$_SERVER['PHP_SELF']."?id=".$pageId."' method='post'>
+?>
+<form name='adminPage' action='<?php echo $_SERVER['PHP_SELF']?>?id="<?php $pageId ?>"' method='post'>
 <input type='hidden' name='process' value='1'>
 <table class='admin'>
 <tr><td>
@@ -98,15 +98,15 @@ echo "
 <div id='regbox'>
 <p>
 <label>ID:</label>
-".$pageDetails['id']."
+<?php echo $pageDetails['id'] ?>
 </p>
 <p>
 <label>Name:</label>
-".$pageDetails['page']."
+<?php echo $pageDetails['page'] ?>
 </p>
 <p>
-<label>Private:</label>";
-
+<label>Private:</label>
+<?php 
 //Display private checkbox
 if ($pageDetails['private'] == 1){
 	echo "<input type='checkbox' name='private' id='private' value='Yes' checked>";
@@ -115,14 +115,14 @@ else {
 	echo "<input type='checkbox' name='private' id='private' value='Yes'>";	
 }
 
-echo "
+?>
 </p>
 </div></td><td>
 <h3>Page Access</h3>
 <div id='regbox'>
 <p>
-Remove Access:";
-
+Remove Access:
+<?php 
 //Display list of permission levels with access
 foreach ($permissionData as $v1) {
 	if(isset($pagePermissions[$v1['id']])){
@@ -130,8 +130,9 @@ foreach ($permissionData as $v1) {
 	}
 }
 
-echo"
-</p><p>Add Access:";
+?>
+</p><p>Add Access:
+<?php
 
 //Display list of permission levels without access
 foreach ($permissionData as $v1) {
@@ -140,7 +141,7 @@ foreach ($permissionData as $v1) {
 	}
 }
 
-echo"
+?>
 </p>
 </div>
 </td>
@@ -155,6 +156,4 @@ echo"
 <div id='bottom'></div>
 </div>
 </body>
-</html>";
-
-?>
+</html>
