@@ -145,8 +145,8 @@ function resultBlock($errors,$successes){
 	//Error block
 	if(count($errors) > 0)
 	{
-		echo "<div id='error'>
-		<a href='#' onclick=\"showHide('error');\">[X]</a>
+		echo "<div class='alert alert-danger' id='error'>
+		<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
 		<ul>";
 		foreach($errors as $error)
 		{
@@ -158,8 +158,8 @@ function resultBlock($errors,$successes){
 	//Success block
 	if(count($successes) > 0)
 	{
-		echo "<div id='success'>
-		<a href='#' onclick=\"showHide('success');\">[X]</a>
+		echo "<div class='alert alert-success' id='success'>
+		<button type='button' class='close' data-dismiss='alert' aria-hidden='true'>&times;</button>
 		<ul>";
 		foreach($successes as $success)
 		{
@@ -321,7 +321,7 @@ function fetchAllUsers()
 		last_sign_in_stamp
 		FROM ".$db_table_prefix."users");
 	$stmt->execute();
-	$stmt->bind_result($id, $user, $display, $password, $email, $rut, $token, $activationRequest, $passwordRequest, $active, $title, $signUp, $signIn);
+	$stmt->bind_result($id, $user, $lastname, $password, $email, $rut, $token, $activationRequest, $passwordRequest, $active, $title, $signUp, $signIn);
 	
 	while ($stmt->fetch()){
 		$row[] = array('id' => $id, 'user_name' => $user, 'lastname' => $lastname, 'password' => $password, 'email' => $email, 'rut' => $rut, 'activation_token' => $token, 'last_activation_request' => $activationRequest, 'lost_password_request' => $passwordRequest, 'active' => $active, 'title' => $title, 'sign_up_stamp' => $signUp, 'last_sign_in_stamp' => $signIn);

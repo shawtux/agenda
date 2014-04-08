@@ -5,7 +5,7 @@ http://usercake.com
 */
 
 require_once("models/config.php");
-require_once ("navigation.php");
+
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 
 //Prevent the user visiting the logged in page if he is not logged in
@@ -103,51 +103,51 @@ if(!empty($_POST))
 }
 
 require_once("models/header.php");
-echo "
+?>
+
 <body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>UserCake</h1>
-<h2>User Settings</h2>
-<div id='left-nav'>";
-include("left-nav.php");
-
-echo "
-</div>
-<div id='main'>";
-
+<div class='container' id='wrapper'>
+<?php 
+require_once ("navigation.php");
+?>
+<div id='top'>
+<?php 
 echo resultBlock($errors,$successes);
+?>
+</div>
+<div class='jumbotron' id='content'>
+<h1><?php echo $websiteName; ?></h1>
+<h2>User Settings</h2>
 
-echo "
+
+<div id='main'>
 <div id='regbox'>
-<form name='updateAccount' action='".$_SERVER['PHP_SELF']."' method='post'>
-<p>
-<label>Password:</label>
-<input type='password' name='password' />
-</p>
-<p>
-<label>Email:</label>
-<input type='text' name='email' value='".$loggedInUser->email."' />
-</p>
-<p>
-<label>New Pass:</label>
-<input type='password' name='passwordc' />
-</p>
-<p>
-<label>Confirm Pass:</label>
-<input type='password' name='passwordcheck' />
-</p>
-<p>
+<form name='updateAccount' action='<?php echo $_SERVER['PHP_SELF'] ?>' method='post'>
+
+						<div class="form-group">
+<label class='control-label'>Contraseña Original:</label>
+<input class="form-control" type='password' name='password' />
+</div>
+						<div class="form-group">
+<label class='control-label'>Correo:</label>
+<input class="form-control" type='text' name='email' value='<?php echo $loggedInUser->email ?>' />
+</div>
+						<div class="form-group">
+<label class='control-label'>Nueva contraseña:</label>
+<input class="form-control" type='password' name='passwordc' />
+</div>
+						<div class="form-group">
+<label class='control-label'>Confirmacíon nueva contraseña:</label>
+<input class="form-control" type='password' name='passwordcheck' />
+</div>
+						<div class="form-group">
 <label>&nbsp;</label>
-<input type='submit' value='Update' class='submit' />
-</p>
+<input type='submit' value='Actualizar' class='submit' />
+</div>
 </form>
 </div>
 </div>
 <div id='bottom'></div>
 </div>
 </body>
-</html>";
-
-?>
+</html>

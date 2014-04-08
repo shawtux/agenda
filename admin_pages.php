@@ -1,84 +1,85 @@
 <?php
 /*
-UserCake Version: 2.0.2
-http://usercake.com
-*/
+ * UserCake Version: 2.0.2 http://usercake.com
+ */
+require_once ("models/config.php");
 
-require_once("models/config.php");
-require_once ("navigation.php");
-if (!securePage($_SERVER['PHP_SELF'])){die();}
+if (! securePage ( $_SERVER ['PHP_SELF'] )) {
+	die ();
+}
 
-$pages = getPageFiles(); //Retrieve list of pages in root usercake folder
-$dbpages = fetchAllPages(); //Retrieve list of pages in pages table
-$creations = array();
-$deletions = array();
+$pages = getPageFiles (); // Retrieve list of pages in root usercake folder
+$dbpages = fetchAllPages (); // Retrieve list of pages in pages table
+$creations = array ();
+$deletions = array ();
 
-//Check if any pages exist which are not in DB
-foreach ($pages as $page){
-	if(!isset($dbpages[$page])){
-		$creations[] = $page;	
+// Check if any pages exist which are not in DB
+foreach ( $pages as $page ) {
+	if (! isset ( $dbpages [$page] )) {
+		$creations [] = $page;
 	}
 }
 
-//Enter new pages in DB if found
-if (count($creations) > 0) {
-	createPages($creations)	;
+// Enter new pages in DB if found
+if (count ( $creations ) > 0) {
+	createPages ( $creations );
 }
 
-if (count($dbpages) > 0){
-	//Check if DB contains pages that don't exist
-	foreach ($dbpages as $page){
-		if(!isset($pages[$page['page']])){
-			$deletions[] = $page['id'];	
+if (count ( $dbpages ) > 0) {
+	// Check if DB contains pages that don't exist
+	foreach ( $dbpages as $page ) {
+		if (! isset ( $pages [$page ['page']] )) {
+			$deletions [] = $page ['id'];
 		}
 	}
 }
 
-//Delete pages from DB if not found
-if (count($deletions) > 0) {
-	deletePages($deletions);
+// Delete pages from DB if not found
+if (count ( $deletions ) > 0) {
+	deletePages ( $deletions );
 }
 
-//Update DB pages
-$dbpages = fetchAllPages();
+// Update DB pages
+$dbpages = fetchAllPages ();
 
-require_once("models/header.php");
+require_once ("models/header.php");
 
-echo "
+?>
 <body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>UserCake</h1>
-<h2>Admin Pages</h2>
-<div id='left-nav'>";
+	<div class='container' id='wrapper'>
+<?php
+require_once ("navigation.php");
+?>
+<div id='top'></div>
+		<div class='jumbotron' id='content'>
+			<h1><?php echo $websiteName; ?></h1>
+			<h2>Admin Pages</h2>
 
-include("left-nav.php");
-
-echo "
-</div>
-<div id='main'>
-<table class='admin'>
-<tr><th>Id</th><th>Page</th><th>Access</th></tr>";
-
-//Display list of pages
-foreach ($dbpages as $page){
+			<div id='main'>
+				<table class='admin table'>
+					<tr>
+						<th>Id</th>
+						<th>Page</th>
+						<th>Access</th>
+					</tr>
+<?php
+// Display list of pages
+foreach ( $dbpages as $page ) {
 	echo "
 	<tr>
 	<td>
-	".$page['id']."
+	" . $page ['id'] . "
 	</td>
 	<td>
-	<a href ='admin_page.php?id=".$page['id']."'>".$page['page']."</a>
+	<a href ='admin_page.php?id=" . $page ['id'] . "'>" . $page ['page'] . "</a>
 	</td>
 	<td>";
 	
-	//Show public/private setting of page
-	if($page['private'] == 0){
+	// Show public/private setting of page
+	if ($page ['private'] == 0) {
 		echo "Public";
-	}
-	else {
-		echo "Private";	
+	} else {
+		echo "Private";
 	}
 	
 	echo "
@@ -86,12 +87,11 @@ foreach ($dbpages as $page){
 	</tr>";
 }
 
-echo "
-</table>
-</div>
-<div id='bottom'></div>
-</div>
-</body>
-</html>";
-
 ?>
+</table>
+			</div>
+			<div id='bottom'></div>
+		</div>
+
+</body>
+</html>

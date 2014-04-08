@@ -5,7 +5,7 @@ http://usercake.com
 */
 
 require_once("models/config.php");
-require_once ("navigation.php");
+
 if (!securePage($_SERVER['PHP_SELF'])){die();}
 $userId = $_GET['id'];
 
@@ -143,73 +143,67 @@ $permissionData = fetchAllPermissions();
 
 require_once("models/header.php");
 
-echo "
+?>
 <body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>UserCake</h1>
+<div class='container' id='wrapper'>
+<?php 
+require_once ("navigation.php");
+?>
+<div id='top'><?php echo resultBlock($errors,$successes); ?></div>
+<div class='jumbotron' id='content'>
+<h1><?php echo $websiteName; ?></h1>
 <h2>Admin User</h2>
-<div id='left-nav'>";
 
-include("left-nav.php");
+<div id='main'>
 
-echo "
-</div>
-<div id='main'>";
-
-echo resultBlock($errors,$successes);
-
-echo "
-<form name='adminUser' action='".$_SERVER['PHP_SELF']."?id=".$userId."' method='post'>
-<table class='admin'><tr><td>
+<form name='adminUser' action='<?php echo $_SERVER['PHP_SELF']?>?id=<?php echo $userId?>' method='post' class="form-horizontal" role="form">
+<table class='admin table'><tr>
+<td>
 <h3>User Information</h3>
 <div id='regbox'>
-<p>
+<div class="form-group">
 <label>ID:</label>
-".$userdetails['id']."
-</p>
-<p>
+<?php echo $userdetails['id'] ?>
+</div>
+<div class="form-group">
 <label>Username:</label>
-".$userdetails['user_name']."
-</p>
-<p>
-<label>Display Name:</label>
-<input type='text' name='display' value='".$userdetails['display_name']."' />
-</p>
-<p>
+<?php echo $userdetails['user_name']." ".$userdetails['lastname'] ?>
+</div>
+<div class="form-group">
 <label>Email:</label>
-<input type='text' name='email' value='".$userdetails['email']."' />
-</p>
-<p>
-<label>Active:</label>";
+<input class="form-control" type='text' name='email' value='<?php echo $userdetails['email'] ?>' />
+</div>
+<div class="form-group">
+<label>Active:</label>
 
+<?php 
 //Display activation link, if account inactive
 if ($userdetails['active'] == '1'){
 	echo "Yes";	
 }
 else{
-	echo "No
-	</p>
-	<p>
+	?>
+	No
+	</div>
+<div class="form-group">
 	<label>Activate:</label>
-	<input type='checkbox' name='activate' id='activate' value='activate'>
-	";
+	<input class="form-control" type='checkbox' name='activate' id='activate' value='activate'>
+	<?php 
 }
 
-echo "
-</p>
-<p>
+?>
+</div>
+<div class="form-group">
 <label>Title:</label>
-<input type='text' name='title' value='".$userdetails['title']."' />
-</p>
-<p>
+<input class="form-control" type='text' name='title' value='<?php echo $userdetails['title'] ?>' />
+</div>
+<div class="form-group">
 <label>Sign Up:</label>
-".date("j M, Y", $userdetails['sign_up_stamp'])."
-</p>
-<p>
-<label>Last Sign In:</label>";
-
+<?php echo date("j M, Y", $userdetails['sign_up_stamp']) ?>
+</div>
+<div class="form-group">
+<label>Last Sign In:</label>
+<?php 
 //Last sign in, interpretation
 if ($userdetails['last_sign_in_stamp'] == '0'){
 	echo "Never";	
@@ -218,23 +212,25 @@ else {
 	echo date("j M, Y", $userdetails['last_sign_in_stamp']);
 }
 
-echo "
-</p>
-<p>
+?>
+</div>
+<div class="form-group">
 <label>Delete:</label>
-<input type='checkbox' name='delete[".$userdetails['id']."]' id='delete[".$userdetails['id']."]' value='".$userdetails['id']."'>
-</p>
-<p>
+<input type='checkbox' name='delete[<?php echo $userdetails['id'] ?>]' id='delete[<?php echo $userdetails['id'] ?>]' value='<?php echo $userdetails['id'] ?>'>
+</div>
+<div class="form-group">
 <label>&nbsp;</label>
 <input type='submit' value='Update' class='submit' />
-</p>
+</div>
 </div>
 </td>
 <td>
 <h3>Permission Membership</h3>
 <div id='regbox'>
-<p>Remove Permission:";
-
+</div>
+<div class="form-group">
+<label>Remove Permission: </label>
+<?php 
 //List of permission levels user is apart of
 foreach ($permissionData as $v1) {
 	if(isset($userPermission[$v1['id']])){
@@ -243,15 +239,19 @@ foreach ($permissionData as $v1) {
 }
 
 //List of permission levels user is not apart of
-echo "</p><p>Add Permission:";
+?>
+</div>
+<div class="form-group">
+<label>Add Permission:</label>
+<?php 
 foreach ($permissionData as $v1) {
 	if(!isset($userPermission[$v1['id']])){
 		echo "<br><input type='checkbox' name='addPermission[".$v1['id']."]' id='addPermission[".$v1['id']."]' value='".$v1['id']."'> ".$v1['name'];
 	}
 }
 
-echo"
-</p>
+?>
+</div>
 </div>
 </td>
 </tr>
@@ -261,6 +261,4 @@ echo"
 <div id='bottom'></div>
 </div>
 </body>
-</html>";
-
-?>
+</html>

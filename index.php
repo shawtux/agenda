@@ -11,12 +11,12 @@ require_once ("models/header.php");
 require_once ("navigation.php");
 ?>
 <body>
-	<div id='wrapper'>
+	<div class='container' id='wrapper'>
 		<div id='top'>
-			<div id='logo'></div>
+			
 		</div>
-		<div id='content'>
-			<h1>UserCake</h1>
+		<div class='jumbotron' id='content'>
+			<h1><?php echo $websiteName; ?></h1>
 			<h2>2.00</h2>
 			<div id='left-nav'>
 				<?php

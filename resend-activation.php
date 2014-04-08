@@ -116,10 +116,10 @@ require_once("models/header.php");
 
 echo "
 <body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>UserCake</h1>
+<div class='container' id='wrapper'>
+<div id='top'></div>
+<div class='jumbotron' id='content'>
+<h1><?php echo $websiteName; ?></h1>
 <h2>Resend Activation</h2>
 <div id='left-nav'>";
 
@@ -143,15 +143,15 @@ else
 	echo "<form name='resendActivation' action='".$_SERVER['PHP_SELF']."' method='post'>
 	<p>
 	<label>Username:</label>
-	<input type='text' name='username' />
+	<input class="form-control" type='text' name='username' />
         </p>     
         <p>
         <label>Email:</label>
-        <input type='text' name='email' />
+        <input class="form-control" type='text' name='email' />
         </p>    
         <p>
         <label>&nbsp;</label>
-        <input type='submit' value='Submit' class='submit' />
+        <input class="form-control" type='submit' value='Submit' class='submit' />
         </p>
         </form>";
 }

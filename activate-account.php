@@ -41,10 +41,10 @@ require_once("models/header.php");
 
 echo "
 <body>
-<div id='wrapper'>
-<div id='top'><div id='logo'></div></div>
-<div id='content'>
-<h1>UserCake</h1>
+<div class='container' id='wrapper'>
+<div id='top'></div>
+<div class='jumbotron' id='content'>
+<h1><?php echo $websiteName; ?></h1>
 <h2>Activate Account</h2>
 
 <div id='left-nav'>";
