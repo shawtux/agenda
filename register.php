@@ -74,14 +74,14 @@ if (! empty ( $_POST )) {
 				$errors [] = lang ( "ACCOUNT_USERNAME_IN_USE", array (
 						$username 
 				) );
-			if ($user->displayname_taken)
-				$errors [] = lang ( "ACCOUNT_DISPLAYNAME_IN_USE", array (
-						$displayname 
-				) );
 			if ($user->email_taken)
 				$errors [] = lang ( "ACCOUNT_EMAIL_IN_USE", array (
 						$email 
 				) );
+			if ($user->rut_taken)
+				$errors [] = lang ( "ACCOUNT_RUT_IN_USE", array (
+						$rut
+				));
 		} else {
 			// Attempt to add the user to the database, carry out finishing tasks like emailing the user (if required)
 			if (! $user->userCakeAddUser ()) {
@@ -111,7 +111,7 @@ require_once ("navigation.php");
 echo resultBlock ( $errors, $successes );
 ?>
 </div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 			<h1><?php echo $websiteName; ?></h1>
 			<h2>Nuevo Registro</h2>
 			<div id='main'>

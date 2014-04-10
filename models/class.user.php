@@ -39,6 +39,19 @@ class loggedInUser {
 		$stmt->close();
 		return ($timestamp);
 	}
+	public function lastLoginTimeStamp(){
+		global $mysqli,$db_table_prefix;
+		
+		$stmt = $mysqli->prepare("SELECT last_sign_in_stamp
+			FROM ".$db_table_prefix."users
+			WHERE id = ?");
+		$stmt->bind_param("i", $this->user_id);
+		$stmt->execute();
+		$stmt->bind_result($timestamp);
+		$stmt->fetch();
+		$stmt->close();
+		return ($timestamp);
+	}
 	
 	//Update a users password
 	public function updatePassword($pass)

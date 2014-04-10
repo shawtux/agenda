@@ -89,7 +89,7 @@ echo resultBlock ( $errors, $successes );
 
 ?>
 </div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 			<h1><?php echo $websiteName; ?></h1>
 			<h2>Admin Page</h2>
 			<div id='main'>

@@ -15,14 +15,9 @@ require_once ("navigation.php");
 		<div id='top'>
 			
 		</div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 			<h1><?php echo $websiteName; ?></h1>
 			<h2>2.00</h2>
-			<div id='left-nav'>
-				<?php
-					include ("left-nav.php");
-				?>
-			</div>
 			<div id='main'>
 				<p>
 					Thank you for downloading UserCake. 100% Free and Opensource.

@@ -51,7 +51,7 @@ require_once ("models/header.php");
 require_once ("navigation.php");
 ?>
 <div id='top'></div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 			<h1><?php echo $websiteName; ?></h1>
 			<h2>Admin Pages</h2>
 

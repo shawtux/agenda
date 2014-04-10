@@ -85,7 +85,7 @@ require_once ("navigation.php");
 echo resultBlock ( $errors, $successes );
 
 ?></div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 			<h1><?php echo $websiteName; ?></h1>
 			<h2>Ingreso</h2>
 

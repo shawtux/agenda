@@ -1,248 +1,251 @@
 <?php
 /*
-UserCake Version: 2.0.2
-http://usercake.com
-*/
+ * UserCake Version: 2.0.2 http://usercake.com
+ */
+require_once ("models/config.php");
 
-require_once("models/config.php");
+if (! securePage ( $_SERVER ['PHP_SELF'] )) {
+	die ();
+}
+$userId = $_GET ['id'];
 
-if (!securePage($_SERVER['PHP_SELF'])){die();}
-$userId = $_GET['id'];
-
-//Check if selected user exists
-if(!userIdExists($userId)){
-	header("Location: admin_users.php"); die();
+// Check if selected user exists
+if (! userIdExists ( $userId )) {
+	header ( "Location: admin_users.php" );
+	die ();
 }
 
-$userdetails = fetchUserDetails(NULL, NULL, $userId); //Fetch user details
-
-//Forms posted
-if(!empty($_POST))
-{	
-	//Delete selected account
-	if(!empty($_POST['delete'])){
-		$deletions = $_POST['delete'];
-		if ($deletion_count = deleteUsers($deletions)) {
-			$successes[] = lang("ACCOUNT_DELETIONS_SUCCESSFUL", array($deletion_count));
+$userdetails = fetchUserDetails ( NULL, NULL, $userId ); // Fetch user details
+                                                      
+// Forms posted
+if (! empty ( $_POST )) {
+	// Delete selected account
+	if (! empty ( $_POST ['delete'] )) {
+		$deletions = $_POST ['delete'];
+		if ($deletion_count = deleteUsers ( $deletions )) {
+			$successes [] = lang ( "ACCOUNT_DELETIONS_SUCCESSFUL", array (
+					$deletion_count 
+			) );
+		} else {
+			$errors [] = lang ( "SQL_ERROR" );
 		}
-		else {
-			$errors[] = lang("SQL_ERROR");
-		}
-	}
-	else
-	{
-		//Update display name
-		if ($userdetails['display_name'] != $_POST['display']){
-			$displayname = trim($_POST['display']);
+	} else {
+		// Update display name
+		if ($userdetails ['display_name'] != $_POST ['display']) {
+			$displayname = trim ( $_POST ['display'] );
 			
-			//Validate display name
-			if(displayNameExists($displayname))
-			{
-				$errors[] = lang("ACCOUNT_DISPLAYNAME_IN_USE",array($displayname));
-			}
-			elseif(minMaxRange(5,25,$displayname))
-			{
-				$errors[] = lang("ACCOUNT_DISPLAY_CHAR_LIMIT",array(5,25));
-			}
-			elseif(!ctype_alnum($displayname)){
-				$errors[] = lang("ACCOUNT_DISPLAY_INVALID_CHARACTERS");
-			}
-			else {
-				if (updateDisplayName($userId, $displayname)){
-					$successes[] = lang("ACCOUNT_DISPLAYNAME_UPDATED", array($displayname));
+			// Validate display name
+			if (displayNameExists ( $displayname )) {
+				$errors [] = lang ( "ACCOUNT_DISPLAYNAME_IN_USE", array (
+						$displayname 
+				) );
+			} elseif (minMaxRange ( 5, 25, $displayname )) {
+				$errors [] = lang ( "ACCOUNT_DISPLAY_CHAR_LIMIT", array (
+						5,
+						25 
+				) );
+			} elseif (! ctype_alnum ( $displayname )) {
+				$errors [] = lang ( "ACCOUNT_DISPLAY_INVALID_CHARACTERS" );
+			} else {
+				if (updateDisplayName ( $userId, $displayname )) {
+					$successes [] = lang ( "ACCOUNT_DISPLAYNAME_UPDATED", array (
+							$displayname 
+					) );
+				} else {
+					$errors [] = lang ( "SQL_ERROR" );
 				}
-				else {
-					$errors[] = lang("SQL_ERROR");
-				}
 			}
+		} else {
+			$displayname = $userdetails ['display_name'];
+		}
+		
+		// Activate account
+		if (isset ( $_POST ['activate'] ) && $_POST ['activate'] == "activate") {
+			if (setUserActive ( $userdetails ['activation_token'] )) {
+				$successes [] = lang ( "ACCOUNT_MANUALLY_ACTIVATED", array (
+						$displayname 
+				) );
+			} else {
+				$errors [] = lang ( "SQL_ERROR" );
+			}
+		}
+		
+		// Update email
+		if ($userdetails ['email'] != $_POST ['email']) {
+			$email = trim ( $_POST ["email"] );
 			
-		}
-		else {
-			$displayname = $userdetails['display_name'];
+			// Validate email
+			if (! isValidEmail ( $email )) {
+				$errors [] = lang ( "ACCOUNT_INVALID_EMAIL" );
+			} elseif (emailExists ( $email )) {
+				$errors [] = lang ( "ACCOUNT_EMAIL_IN_USE", array (
+						$email 
+				) );
+			} else {
+				if (updateEmail ( $userId, $email )) {
+					$successes [] = lang ( "ACCOUNT_EMAIL_UPDATED" );
+				} else {
+					$errors [] = lang ( "SQL_ERROR" );
+				}
+			}
 		}
 		
-		//Activate account
-		if(isset($_POST['activate']) && $_POST['activate'] == "activate"){
-			if (setUserActive($userdetails['activation_token'])){
-				$successes[] = lang("ACCOUNT_MANUALLY_ACTIVATED", array($displayname));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-		
-		//Update email
-		if ($userdetails['email'] != $_POST['email']){
-			$email = trim($_POST["email"]);
+		// Update title
+		if ($userdetails ['title'] != $_POST ['title']) {
+			$title = trim ( $_POST ['title'] );
 			
-			//Validate email
-			if(!isValidEmail($email))
-			{
-				$errors[] = lang("ACCOUNT_INVALID_EMAIL");
-			}
-			elseif(emailExists($email))
-			{
-				$errors[] = lang("ACCOUNT_EMAIL_IN_USE",array($email));
-			}
-			else {
-				if (updateEmail($userId, $email)){
-					$successes[] = lang("ACCOUNT_EMAIL_UPDATED");
-				}
-				else {
-					$errors[] = lang("SQL_ERROR");
-				}
-			}
-		}
-		
-		//Update title
-		if ($userdetails['title'] != $_POST['title']){
-			$title = trim($_POST['title']);
-			
-			//Validate title
-			if(minMaxRange(1,50,$title))
-			{
-				$errors[] = lang("ACCOUNT_TITLE_CHAR_LIMIT",array(1,50));
-			}
-			else {
-				if (updateTitle($userId, $title)){
-					$successes[] = lang("ACCOUNT_TITLE_UPDATED", array ($displayname, $title));
-				}
-				else {
-					$errors[] = lang("SQL_ERROR");
+			// Validate title
+			if (minMaxRange ( 1, 50, $title )) {
+				$errors [] = lang ( "ACCOUNT_TITLE_CHAR_LIMIT", array (
+						1,
+						50 
+				) );
+			} else {
+				if (updateTitle ( $userId, $title )) {
+					$successes [] = lang ( "ACCOUNT_TITLE_UPDATED", array (
+							$displayname,
+							$title 
+					) );
+				} else {
+					$errors [] = lang ( "SQL_ERROR" );
 				}
 			}
 		}
 		
-		//Remove permission level
-		if(!empty($_POST['removePermission'])){
-			$remove = $_POST['removePermission'];
-			if ($deletion_count = removePermission($remove, $userId)){
-				$successes[] = lang("ACCOUNT_PERMISSION_REMOVED", array ($deletion_count));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
-			}
-		}
-		
-		if(!empty($_POST['addPermission'])){
-			$add = $_POST['addPermission'];
-			if ($addition_count = addPermission($add, $userId)){
-				$successes[] = lang("ACCOUNT_PERMISSION_ADDED", array ($addition_count));
-			}
-			else {
-				$errors[] = lang("SQL_ERROR");
+		// Remove permission level
+		if (! empty ( $_POST ['removePermission'] )) {
+			$remove = $_POST ['removePermission'];
+			if ($deletion_count = removePermission ( $remove, $userId )) {
+				$successes [] = lang ( "ACCOUNT_PERMISSION_REMOVED", array (
+						$deletion_count 
+				) );
+			} else {
+				$errors [] = lang ( "SQL_ERROR" );
 			}
 		}
 		
-		$userdetails = fetchUserDetails(NULL, NULL, $userId);
+		if (! empty ( $_POST ['addPermission'] )) {
+			$add = $_POST ['addPermission'];
+			if ($addition_count = addPermission ( $add, $userId )) {
+				$successes [] = lang ( "ACCOUNT_PERMISSION_ADDED", array (
+						$addition_count 
+				) );
+			} else {
+				$errors [] = lang ( "SQL_ERROR" );
+			}
+		}
+		
+		$userdetails = fetchUserDetails ( NULL, NULL, $userId );
 	}
 }
 
-$userPermission = fetchUserPermissions($userId);
-$permissionData = fetchAllPermissions();
+$userPermission = fetchUserPermissions ( $userId );
+$permissionData = fetchAllPermissions ();
 
-require_once("models/header.php");
+require_once ("models/header.php");
 
 ?>
 <body>
-<div class='container' id='wrapper'>
-<?php 
+	<div class='container' id='wrapper'>
+<?php
 require_once ("navigation.php");
 ?>
 <div id='top'><?php echo resultBlock($errors,$successes); ?></div>
-<div class='jumbotron' id='content'>
-<h1><?php echo $websiteName; ?></h1>
-<h2>Admin User</h2>
+		<div id='content'>
+			<h1><?php echo $websiteName; ?></h1>
+			<h2>Admin User</h2>
 
-<div id='main'>
+			<div id='main'>
 
-<form name='adminUser' action='<?php echo $_SERVER['PHP_SELF']?>?id=<?php echo $userId?>' method='post' class="form-horizontal" role="form">
-<table class='admin table'><tr>
-<td>
-<h3>User Information</h3>
-<div id='regbox'>
-<div class="form-group">
-<label>ID:</label>
-<?php echo $userdetails['id'] ?>
+				<form name='adminUser'
+					action='<?php echo $_SERVER['PHP_SELF']?>?id=<?php echo $userId?>'
+					method='post' class="form-horizontal" role="form">
+					<div class="row">
+					 <div class="col-md-6">
+								<h3>User Information</h3>
+								<div id='regbox'>
+									<div class="form-group">
+										<label>ID:</label>
+<?php echo $userdetails['id']?>
 </div>
-<div class="form-group">
-<label>Username:</label>
-<?php echo $userdetails['user_name']." ".$userdetails['lastname'] ?>
+									<div class="form-group">
+										<label>Username:</label>
+<?php echo $userdetails['user_name']." ".$userdetails['lastname']?>
 </div>
-<div class="form-group">
-<label>Email:</label>
-<input class="form-control" type='text' name='email' value='<?php echo $userdetails['email'] ?>' />
-</div>
-<div class="form-group">
-<label>Active:</label>
+									<div class="form-group">
+										<label>Email:</label> <input class="form-control" type='text'
+											name='email' value='<?php echo $userdetails['email'] ?>' />
+									</div>
+									<div class="form-group">
+										<label>Active:</label>
 
-<?php 
-//Display activation link, if account inactive
-if ($userdetails['active'] == '1'){
-	echo "Yes";	
-}
-else{
+<?php
+// Display activation link, if account inactive
+if ($userdetails ['active'] == '1') {
+	echo "Yes";
+} else {
 	?>
 	No
 	</div>
-<div class="form-group">
-	<label>Activate:</label>
-	<input class="form-control" type='checkbox' name='activate' id='activate' value='activate'>
-	<?php 
+									<div class="form-group">
+										<label>Activate:</label> <input class="form-control"
+											type='checkbox' name='activate' id='activate'
+											value='activate'>
+	<?php
 }
 
 ?>
 </div>
-<div class="form-group">
-<label>Title:</label>
-<input class="form-control" type='text' name='title' value='<?php echo $userdetails['title'] ?>' />
+									<div class="form-group">
+										<label>Title:</label> <input class="form-control" type='text'
+											name='title' value='<?php echo $userdetails['title'] ?>' />
+									</div>
+									<div class="form-group">
+										<label>Sign Up:</label>
+<?php echo date("j M, Y", $userdetails['sign_up_stamp'])?>
 </div>
-<div class="form-group">
-<label>Sign Up:</label>
-<?php echo date("j M, Y", $userdetails['sign_up_stamp']) ?>
-</div>
-<div class="form-group">
-<label>Last Sign In:</label>
-<?php 
-//Last sign in, interpretation
-if ($userdetails['last_sign_in_stamp'] == '0'){
-	echo "Never";	
-}
-else {
-	echo date("j M, Y", $userdetails['last_sign_in_stamp']);
+									<div class="form-group">
+										<label>Last Sign In:</label>
+<?php
+// Last sign in, interpretation
+if ($userdetails ['last_sign_in_stamp'] == '0') {
+	echo "Never";
+} else {
+	echo date ( "j M, Y", $userdetails ['last_sign_in_stamp'] );
 }
 
 ?>
 </div>
-<div class="form-group">
-<label>Delete:</label>
-<input type='checkbox' name='delete[<?php echo $userdetails['id'] ?>]' id='delete[<?php echo $userdetails['id'] ?>]' value='<?php echo $userdetails['id'] ?>'>
-</div>
-<div class="form-group">
-<label>&nbsp;</label>
-<input type='submit' value='Update' class='submit' />
-</div>
-</div>
-</td>
-<td>
-<h3>Permission Membership</h3>
-<div id='regbox'>
-</div>
-<div class="form-group">
-<label>Remove Permission: </label>
-<?php 
-//List of permission levels user is apart of
-foreach ($permissionData as $v1) {
-	if(isset($userPermission[$v1['id']])){
-		echo "<br><input type='checkbox' name='removePermission[".$v1['id']."]' id='removePermission[".$v1['id']."]' value='".$v1['id']."'> ".$v1['name'];
+									<div class="form-group">
+										<label>Delete:</label> <input type='checkbox'
+											name='delete[<?php echo $userdetails['id'] ?>]'
+											id='delete[<?php echo $userdetails['id'] ?>]'
+											value='<?php echo $userdetails['id'] ?>'>
+									</div>
+									<div class="form-group">
+										<label>&nbsp;</label> <input type='submit' value='Update'
+											class='submit' />
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<h3>Permission Membership</h3>
+								<div id='regbox'></div>
+								<div class="form-group">
+									<label>Remove Permission: </label>
+<?php
+// List of permission levels user is apart of
+foreach ( $permissionData as $v1 ) {
+	if (isset ( $userPermission [$v1 ['id']] )) {
+		echo "<br><input type='checkbox' name='removePermission[" . $v1 ['id'] . "]' id='removePermission[" . $v1 ['id'] . "]' value='" . $v1 ['id'] . "'> " . $v1 ['name'];
 	}
 }
 
 //List of permission levels user is not apart of
 ?>
 </div>
-<div class="form-group">
-<label>Add Permission:</label>
+								<div class="form-group">
+									<label>Add Permission:</label>
 <?php 
 foreach ($permissionData as $v1) {
 	if(!isset($userPermission[$v1['id']])){
@@ -252,13 +255,12 @@ foreach ($permissionData as $v1) {
 
 ?>
 </div>
-</div>
-</td>
-</tr>
-</table>
-</form>
-</div>
-<div id='bottom'></div>
-</div>
+								</div>
+							</div>
+				</form>
+			</div>
+			<div id='bottom'></div>
+		</div>
+
 </body>
 </html>

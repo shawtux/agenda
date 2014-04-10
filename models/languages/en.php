@@ -55,7 +55,8 @@ $lang = array_merge($lang,array(
 	"ACCOUNT_PERMISSION_REMOVED"		=> "Removed access from %m1% permission levels",
 	"ACCOUNT_INVALID_USERNAME"		=> "Invalid username",
 	"RUT_LENGTH_INVALID"	=> "Invalid length of RUT",
-	"RUT_FORMAT_WRONG"	=> "Accepted formats for RUT are 11222333-4 or 11.222.333-4"
+	"RUT_FORMAT_WRONG"	=> "Accepted formats for RUT are 11222333-4 or 11.222.333-4",
+	"ACCOUNT_RUT_IN_USE" => "RUT is already in use"
 	
 	
 	

@@ -154,7 +154,7 @@ require_once ("models/header.php");
 echo resultBlock ( $errors, $successes );
 ?>
 </div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 <?php
 require_once ("navigation.php");
 ?>

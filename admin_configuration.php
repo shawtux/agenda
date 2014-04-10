@@ -151,7 +151,7 @@ require_once ("models/header.php");
 		echo resultBlock ( $errors, $successes );
 		?>
 		</div>
-		<div class='jumbotron' id='content'>
+		<div  id='content'>
 			<h1><?php echo $websiteName; ?></h1>
 			<h2>Admin Configuration</h2>
 
@@ -161,40 +161,41 @@ require_once ("models/header.php");
 					<form name='adminConfiguration'
 						action='<?php echo $_SERVER['PHP_SELF'] ?>' method='post'  class="form-horizontal" role="form">
 						<div class="form-group">
+						<div class="row">
 							<label class="col-sm-2 control-label">Website Name:</label>
-							<div class="col-sm-10">
+							<div class="col-sm-4">
 								<input class="form-control" type='text'
 									name='settings[<?php echo $settings['website_name']['id'] ?>]'
 									value='<?php echo $websiteName ?>' />
-							</div>
+							</div></div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Website URL:</label>
-							<div class="col-sm-10">
+							<div class="row"><label class="col-sm-2 control-label">Website URL:</label>
+							<div class="col-sm-4">
 								<input class="form-control" type='text'
 									name='settings[<?php echo $settings['website_url']['id'] ?>]'
 									value='<?php echo $websiteUrl ?>' />
-							</div>
+							</div></div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Email:</label>
-							<div class="col-sm-10">
+							<div class="row"><label class="col-sm-2 control-label">Email:</label>
+							<div class="col-sm-4">
 								<input class="form-control" type='text'
 									name='settings[<?php echo $settings['email']['id'] ?>]'
 									value='<?php echo $emailAddress ?>' />
-							</div>
+							</div></div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Activation Threshold:</label>
-							<div class="col-sm-10">
+							<div class="row"><label class="col-sm-2 control-label">Activation Threshold:</label>
+							<div class="col-sm-4">
 								<input class="form-control" type='text'
 									name='settings[<?php echo $settings['resend_activation_threshold']['id'] ?>]'
 									value='<?php echo $resend_activation_threshold ?>' />
-							</div>
+							</div></div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Language:</label>
-							<div class="col-sm-10">
+							<div class="row"><label class="col-sm-2 control-label">Language:</label>
+							<div class="col-sm-4">
 								<select class="form-control" name='settings[<?php echo $settings['language']['id'] ?>]'>
 								
 
@@ -211,11 +212,11 @@ require_once ("models/header.php");
 									?>
 								</select>
 
-							</div>
+							</div></div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Email Activation:</label>
-							<div class="col-sm-10"> 
+							<div class="row"><label class="col-sm-2 control-label">Email Activation:</label>
+							<div class="col-sm-4"> 
 							<select class="form-control" name='settings[<?php echo $settings['activation']['id'] ?>]'>
 
 							<?php
@@ -235,10 +236,10 @@ require_once ("models/header.php");
 							?>
 						</select>
 						</div>
-						</div>
+						</div></div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">Template:</label>
-							<div class="col-sm-10">
+							<div class="row"><label class="col-sm-2 control-label">Template:</label>
+							<div class="col-sm-4">
 								<select class="form-control"
 									name='settings[<?php echo $settings['template']['id'] ?>]'>
 
@@ -255,7 +256,7 @@ require_once ("models/header.php");
 							?>
 								</select>
 							</div>
-						</div>
+						</div></div>
 						
 						<input class="btn btn-default" type='submit' name='Submit' value='Submit' />
 					</form>

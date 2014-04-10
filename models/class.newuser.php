@@ -12,36 +12,27 @@ class User
 	public $status = false;
 	private $clean_password;
 	private $username;
-	private $displayname;
+	private $lastname;
+	private $rut;
 	public $sql_failure = false;
 	public $mail_failure = false;
 	public $email_taken = false;
-	public $username_taken = false;
-	public $displayname_taken = false;
+	public $rut_taken = false;
 	public $activation_token = 0;
 	public $success = NULL;
 	
 	function __construct($user,$userlastname,$userrut,$pass,$email)
-	{
-		//Used for display only
-		$this->displayname = $display;
-		
+	{		
 		//Sanitize
+		$this->display = "";
 		$this->clean_email = sanitize($email);
 		$this->clean_password = trim($pass);
 		$this->username = $user;
 		$this->lastname = $userlastname;
 		$this->rut = str_replace(".", "", $userrut);
+		$this->status = false;
 		
-// 		if(usernameExists($this->username))
-// 		{
-// 			$this->username_taken = true;
-// 		}
-		if(displayNameExists($this->displayname))
-		{
-			$this->displayname_taken = true;
-		}
-		else if(emailExists($this->clean_email))
+		if(emailExists($this->clean_email))
 		{
 			$this->email_taken = true;
 		}
@@ -82,7 +73,7 @@ class User
 				//Define more if you want to build larger structures
 				$hooks = array(
 					"searchStrs" => array("#ACTIVATION-MESSAGE","#ACTIVATION-KEY","#USERNAME#"),
-					"subjectStrs" => array($activation_message,$this->activation_token,$this->displayname)
+					"subjectStrs" => array($activation_message,$this->activation_token,$this->username)
 					);
 				
 				/* Build the template - Optional, you can just use the sendMail function 
@@ -117,9 +108,10 @@ class User
 				//Insert the user into the database providing no errors have been found.
 				$stmt = $mysqli->prepare("INSERT INTO ".$db_table_prefix."users (
 					user_name,
-					display_name,
+					lastname,
 					password,
 					email,
+					rut,
 					activation_token,
 					last_activation_request,
 					lost_password_request, 
@@ -134,6 +126,7 @@ class User
 					?,
 					?,
 					?,
+					?,
 					'".time()."',
 					'0',
 					?,
@@ -141,8 +134,7 @@ class User
 					'".time()."',
 					'0'
 					)");
-				
-				$stmt->bind_param("sssssi", $this->username, $this->displayname, $secure_pass, $this->clean_email, $this->activation_token, $this->user_active);
+				$stmt->bind_param("ssssssi", $this->username, $this->lastname, $secure_pass, $this->clean_email, $this->rut, $this->activation_token, $this->user_active);
 				$stmt->execute();
 				$inserted_id = $mysqli->insert_id;
 				$stmt->close();

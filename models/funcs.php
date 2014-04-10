@@ -199,30 +199,30 @@ function deleteUsers($users) {
 	return $i;
 }
 
-//Check if a display name exists in the DB
-function displayNameExists($displayname)
-{
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("SELECT active
-		FROM ".$db_table_prefix."users
-		WHERE
-		display_name = ?
-		LIMIT 1");
-	$stmt->bind_param("s", $displayname);	
-	$stmt->execute();
-	$stmt->store_result();
-	$num_returns = $stmt->num_rows;
-	$stmt->close();
+// //Check if a display name exists in the DB
+// function displayNameExists($displayname)
+// {
+// 	global $mysqli,$db_table_prefix;
+// 	$stmt = $mysqli->prepare("SELECT active
+// 		FROM ".$db_table_prefix."users
+// 		WHERE
+// 		display_name = ?
+// 		LIMIT 1");
+// 	$stmt->bind_param("s", $displayname);	
+// 	$stmt->execute();
+// 	$stmt->store_result();
+// 	$num_returns = $stmt->num_rows;
+// 	$stmt->close();
 	
-	if ($num_returns > 0)
-	{
-		return true;
-	}
-	else
-	{
-		return false;	
-	}
-}
+// 	if ($num_returns > 0)
+// 	{
+// 		return true;
+// 	}
+// 	else
+// 	{
+// 		return false;	
+// 	}
+// }
 
 //Check if an email exists in the DB
 function emailExists($email)
@@ -445,20 +445,20 @@ function setUserActive($token)
 	return $result;
 }
 
-//Change a user's display name
-function updateDisplayName($id, $display)
-{
-	global $mysqli,$db_table_prefix;
-	$stmt = $mysqli->prepare("UPDATE ".$db_table_prefix."users
-		SET display_name = ?
-		WHERE
-		id = ?
-		LIMIT 1");
-	$stmt->bind_param("si", $display, $id);
-	$result = $stmt->execute();
-	$stmt->close();
-	return $result;
-}
+// //Change a user's display name
+// function updateDisplayName($id, $display)
+// {
+// 	global $mysqli,$db_table_prefix;
+// 	$stmt = $mysqli->prepare("UPDATE ".$db_table_prefix."users
+// 		SET display_name = ?
+// 		WHERE
+// 		id = ?
+// 		LIMIT 1");
+// 	$stmt->bind_param("si", $display, $id);
+// 	$result = $stmt->execute();
+// 	$stmt->close();
+// 	return $result;
+// }
 
 //Update a user's email
 function updateEmail($id, $email)
@@ -696,6 +696,21 @@ function fetchPermissionDetails($id)
 	$stmt->bind_result($id, $name);
 	while ($stmt->fetch()){
 		$row = array('id' => $id, 'name' => $name);
+	}
+	$stmt->close();
+	return ($row);
+}
+
+function fetchAllUserCitas($id)
+{
+	global $mysqli;
+	$stmt = $mysqli->prepare("SELECT uc_users.user_name, uc_users.lastname, U.horario_cita, U.user_id_tratante FROM (SELECT * from agenda.citas WHERE user_id = ? ) as U, uc_users WHERE U.user_id_tratante = uc_users.id");
+	$stmt->bind_param("i",$id);
+	$stmt->execute();
+	$stmt->bind_result($nameTratante, $lastnameTratante, $horarioCita, $idTratante);
+	while($stmt->fetch()){
+		$horarioCita = explode(" ", $horarioCita);
+		$row[] = array('user_name' => $nameTratante, 'lastname'=>$lastnameTratante, 'horario_cita'=>$horarioCita[1], 'dia_cita' => $horarioCita[0], 'idTratante' => $idTratante);
 	}
 	$stmt->close();
 	return ($row);
@@ -1237,6 +1252,31 @@ function validaRut($rut){
    }else{
        return false;
    }
+}
+
+function fetchAllTratanteUbicacion($id)
+{
+	global $mysqli;
+	$stmt = $mysqli->prepare(
+		"SELECT 
+			direccion,
+			oficina,
+			comuna,
+			ciudad,
+			telefono,
+			nombre_corto 
+		FROM 
+			ubicacionTratante 
+		WHERE 
+			idTratante = ?");
+	$stmt->bind_param("i",$id);
+	$stmt->execute();
+	$stmt->bind_result($direccion, $oficina, $comuna, $ciudad, $telefono, $nombre_corto);
+	while($stmt->fetch()){
+		$row[] = array('direccion' => $direccion, 'oficina'=>$oficina, 'comuna'=>$comuna, 'ciudad' => $ciudad, 'telefono' => $telefono, 'nombre' => $nombre_corto);
+	}
+	$stmt->close();
+	return ($row);
 }
 
 ?>

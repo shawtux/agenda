@@ -118,7 +118,7 @@ echo "
 <body>
 <div class='container' id='wrapper'>
 <div id='top'></div>
-<div class='jumbotron' id='content'>
+<div  id='content'>
 <h1><?php echo $websiteName; ?></h1>
 <h2>Resend Activation</h2>
 <div id='left-nav'>";
